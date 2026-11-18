@@ -1,0 +1,13 @@
+db.sqlite3
+*.sqlite3
+sqlite_data.json
+venv/
+.env
+
+test_api.http
+
+__pycache__/
+*.py[cod]
+
+__pycache__/
+*.py[cod]
