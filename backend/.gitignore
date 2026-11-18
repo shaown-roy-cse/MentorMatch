@@ -1,40 +1,72 @@
-@'
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
 
-# Django virtual environments
-venv/
-.venv/
-env/
+# ==========================================
+# DATABASE FILES
+# ==========================================
 
-# Environment variables
-.env
-.env.*
-!.env.example
-
-# Database
 db.sqlite3
 *.sqlite3
 sqlite_data.json
 
-# Django generated files
+
+# ==========================================
+# ENVIRONMENT VARIABLES & SECRETS
+# ==========================================
+
+.env
+.env.*
+!.env.example
+
+
+# ==========================================
+# PYTHON
+# ==========================================
+
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+
+# ==========================================
+# DJANGO BACKUP FILES
+# ==========================================
+
+config/settings_backup.py
+
+local_backup*.json
+local_data_export*.json
+local_project_data.json
+production_backup.json
+
+*.bak
+
+
+# ==========================================
+# DJANGO GENERATED FILES
+# ==========================================
+
 staticfiles/
 media/
-*.log
 
-# Frontend
-**/node_modules/
-**/dist/
 
-# Git backup
-backend-git-backup/
+# ==========================================
+# FRONTEND
+# ==========================================
 
-# IDE
-.vscode/
-.idea/
+node_modules/
+dist/
 
-# Local testing
+
+# ==========================================
+# API TESTING
+# ==========================================
+
 test_api.http
-'@ | Set-Content .\.gitignore
+
+
+# ==========================================
+# GIT BACKUP
+# ==========================================
+
+backend-git-backup/
