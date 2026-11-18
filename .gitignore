@@ -14,3 +14,11 @@ __pycache__/
 
 node_modules/
 dist/
+
+
+# Frontend dependencies
+node_modules/
+dist/
+
+# Git backup
+backend-git-backup/

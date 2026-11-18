@@ -1,0 +1,92 @@
+/* Skeleton Base */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 50%,
+    #e5e7eb 75%
+  );
+
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Animation */
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Mentor Skeleton */
+
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-avatar {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  margin: 0 auto 18px;
+}
+
+.skeleton-title {
+  width: 65%;
+  height: 20px;
+  margin: 0 auto 12px;
+}
+
+.skeleton-text {
+  width: 45%;
+  height: 14px;
+  margin: 0 auto 22px;
+}
+
+.skeleton-heading {
+  width: 35%;
+  height: 15px;
+  margin-bottom: 10px;
+}
+
+.skeleton-line {
+  width: 100%;
+  height: 13px;
+  margin-bottom: 12px;
+}
+
+.skeleton-button {
+  width: 100%;
+  height: 42px;
+  margin-top: 18px;
+}
+
+/* Booking Skeleton */
+
+.skeleton-booking {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-booking-title {
+  width: 45%;
+  height: 20px;
+}
+
+@media (max-width: 576px) {
+  .skeleton-card {
+    width: 100%;
+  }
+
+  .skeleton-booking {
+    width: 100%;
+  }
+}

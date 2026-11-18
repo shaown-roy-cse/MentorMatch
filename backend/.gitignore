@@ -1,0 +1,40 @@
+@'
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Django virtual environments
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Database
+db.sqlite3
+*.sqlite3
+sqlite_data.json
+
+# Django generated files
+staticfiles/
+media/
+*.log
+
+# Frontend
+**/node_modules/
+**/dist/
+
+# Git backup
+backend-git-backup/
+
+# IDE
+.vscode/
+.idea/
+
+# Local testing
+test_api.http
+'@ | Set-Content .\.gitignore
