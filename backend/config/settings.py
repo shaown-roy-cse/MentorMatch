@@ -1,22 +1,41 @@
 
-"""
-Django settings for config project.
-"""
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+
+import dj_database_url
+from dotenv import load_dotenv
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 load_dotenv(BASE_DIR / ".env")
 
-# Security
+
+# ==========================================
+# SECURITY
+# ==========================================
+
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-DEBUG = True
-ALLOWED_HOSTS = []
+
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY is not configured!")
+
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "127.0.0.1,localhost"
+    ).split(",")
+    if host.strip()
+]
 
 
-# Application definition
+# ==========================================
+# APPLICATIONS
+# ==========================================
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,9 +54,13 @@ INSTALLED_APPS = [
 ]
 
 
-# Middleware
+# ==========================================
+# MIDDLEWARE
+# ==========================================
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -48,18 +71,45 @@ MIDDLEWARE = [
 ]
 
 
-# CORS Settings
+# ==========================================
+# CORS
+# ==========================================
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174"
+    ).split(",")
+    if origin.strip()
 ]
 
+
+# ==========================================
+# CSRF
+# ==========================================
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174"
+    ).split(",")
+    if origin.strip()
+]
+
+
+# ==========================================
+# URL CONFIGURATION
+# ==========================================
 
 ROOT_URLCONF = 'config.urls'
 
 
-# Templates
+# ==========================================
+# TEMPLATES
+# ==========================================
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -79,20 +129,38 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# PostgreSQL Database Configuration
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mentormatch_db',
-        'USER': 'postgres',
-        'PASSWORD': 'MentorMatch@2026',
-        'HOST': 'localhost',
-        'PORT': '5432',
+# ==========================================
+# DATABASE
+# ==========================================
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=not DEBUG,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'mentormatch_db'),
+            'USER': os.getenv('DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+            'CONN_MAX_AGE': 600,
+        }
+    }
 
 
-# Password Validation
+# ==========================================
+# PASSWORD VALIDATION
+# ==========================================
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,24 +177,50 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# ==========================================
+# INTERNATIONALIZATION
+# ==========================================
+
 LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
+
 USE_TZ = True
 
 
-# Static Files
+# ==========================================
+# STATIC FILES
+# ==========================================
+
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Email Configuration (Demo Mode)
-# Emails will be displayed in the Backend Terminal.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+
+# ==========================================
+# EMAIL
+# ==========================================
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 DEFAULT_FROM_EMAIL = 'noreply@mentormatch.com'
 
 
-# REST Framework Settings
+# ==========================================
+# REST FRAMEWORK
+# ==========================================
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -134,5 +228,32 @@ REST_FRAMEWORK = {
 }
 
 
-# Default Primary Key
+# ==========================================
+# DEFAULT PRIMARY KEY
+# ==========================================
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ==========================================
+# PRODUCTION SECURITY
+# ==========================================
+
+if not DEBUG:
+
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https"
+    )
+
+    SECURE_SSL_REDIRECT = True
+
+    SESSION_COOKIE_SECURE = True
+
+    CSRF_COOKIE_SECURE = True
+
+    SECURE_HSTS_SECONDS = 31536000
+
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+
+    SECURE_HSTS_PRELOAD = False
