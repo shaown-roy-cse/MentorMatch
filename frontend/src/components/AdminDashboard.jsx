@@ -7,7 +7,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const API_URL = 'http://127.0.0.1:8000/api/auth'
+  // Production Backend API
+  const API_URL = 'https://mentormatch-backend-w23v.onrender.com/api/auth'
 
   // Fetch Dashboard Statistics and Users
   const fetchDashboard = async () => {
@@ -60,10 +61,13 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('access')
     localStorage.removeItem('refresh')
+    localStorage.removeItem('username')
+    localStorage.removeItem('role')
+
     window.location.href = '/login'
   }
 
-  // Statistics Cards
+  // Dashboard Statistics Cards
   const cards = stats ? [
     { title: 'Total Users', value: stats.total_users, icon: '👥' },
     { title: 'Total Students', value: stats.total_students, icon: '🎓' },
@@ -77,90 +81,99 @@ const AdminDashboard = () => {
   ] : []
 
   return (
-    <div style={{
-      display: 'flex',
-      minHeight: '100vh',
-      background: '#f4f6fb',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-
-      {/* SIDEBAR */}
-      <aside style={{
-        width: '250px',
-        minWidth: '250px',
-        background: '#192951',
-        color: 'white',
-        padding: '27px 18px',
+    <div
+      style={{
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: '100vh',
-        boxSizing: 'border-box',
-        position: 'sticky',
-        top: 0
-      }}>
-
+        minHeight: '100vh',
+        background: '#f4f6fb',
+        fontFamily: 'Arial, sans-serif',
+      }}
+    >
+      {/* SIDEBAR */}
+      <aside
+        style={{
+          width: '250px',
+          minWidth: '250px',
+          background: '#192951',
+          color: 'white',
+          padding: '27px 18px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '100vh',
+          boxSizing: 'border-box',
+          position: 'sticky',
+          top: 0,
+        }}
+      >
         <div>
-
           {/* Logo */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            marginBottom: '42px'
-          }}>
-
-            <div style={{
-              width: '42px',
-              height: '42px',
-              background: '#6366f1',
-              borderRadius: '13px',
+          <div
+            style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '23px',
-              fontWeight: 'bold'
-            }}>
+              gap: '12px',
+              marginBottom: '42px',
+            }}
+          >
+            <div
+              style={{
+                width: '42px',
+                height: '42px',
+                background: '#6366f1',
+                borderRadius: '13px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '23px',
+                fontWeight: 'bold',
+              }}
+            >
               M
             </div>
 
-            <h2 style={{
-              fontSize: '20px',
-              margin: 0,
-              fontWeight: 'bold'
-            }}>
+            <h2
+              style={{
+                fontSize: '20px',
+                margin: 0,
+                fontWeight: 'bold',
+              }}
+            >
               MentorMatch
             </h2>
-
           </div>
 
           {/* Workspace */}
-          <p style={{
-            color: '#a5b4cf',
-            fontSize: '11px',
-            fontWeight: 'bold',
-            letterSpacing: '1.2px',
-            marginLeft: '10px',
-            marginBottom: '18px'
-          }}>
+          <p
+            style={{
+              color: '#a5b4cf',
+              fontSize: '11px',
+              fontWeight: 'bold',
+              letterSpacing: '1.2px',
+              marginLeft: '10px',
+              marginBottom: '18px',
+            }}
+          >
             ADMIN WORKSPACE
           </p>
 
           {/* Dashboard Menu */}
-          <div style={{
-            background: '#3932a5',
-            padding: '14px',
-            borderRadius: '11px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            fontWeight: 'bold'
-          }}>
+          <div
+            style={{
+              background: '#3932a5',
+              padding: '14px',
+              borderRadius: '11px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontWeight: 'bold',
+            }}
+          >
             <span>▦</span>
             <span>Dashboard</span>
           </div>
 
-          {/* Refresh Dashboard Button */}
+          {/* Refresh Dashboard */}
           <button
             onClick={fetchDashboard}
             disabled={loading}
@@ -175,15 +188,14 @@ const AdminDashboard = () => {
               cursor: loading ? 'not-allowed' : 'pointer',
               textAlign: 'left',
               fontSize: '14px',
-              opacity: loading ? 0.6 : 1
+              opacity: loading ? 0.6 : 1,
             }}
           >
             ↻ Refresh Dashboard
           </button>
-
         </div>
 
-        {/* Logout Button - Bottom */}
+        {/* Logout */}
         <button
           onClick={handleLogout}
           style={{
@@ -195,23 +207,22 @@ const AdminDashboard = () => {
             borderRadius: '11px',
             cursor: 'pointer',
             textAlign: 'left',
-            fontSize: '14px'
+            fontSize: '14px',
           }}
         >
           ↪ Logout
         </button>
-
       </aside>
 
       {/* MAIN CONTENT */}
-      <main style={{
-        flex: 1,
-        padding: '30px',
-        minWidth: 0,
-        boxSizing: 'border-box'
-      }}>
-
-        {/* Dashboard Header */}
+      <main
+        style={{
+          flex: 1,
+          padding: '30px',
+          minWidth: 0,
+          boxSizing: 'border-box',
+        }}
+      >
         <h1 style={{ color: '#192951' }}>
           Admin Dashboard
         </h1>
@@ -222,25 +233,29 @@ const AdminDashboard = () => {
 
         {/* Loading */}
         {loading && (
-          <div style={{
-            padding: '20px',
-            background: 'white',
-            borderRadius: '10px',
-            marginTop: '20px'
-          }}>
+          <div
+            style={{
+              padding: '20px',
+              background: 'white',
+              borderRadius: '10px',
+              marginTop: '20px',
+            }}
+          >
             <h2>Loading Admin Dashboard...</h2>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div style={{
-            background: '#fee2e2',
-            padding: '20px',
-            borderRadius: '10px',
-            color: '#991b1b',
-            marginTop: '20px'
-          }}>
+          <div
+            style={{
+              background: '#fee2e2',
+              padding: '20px',
+              borderRadius: '10px',
+              color: '#991b1b',
+              marginTop: '20px',
+            }}
+          >
             <h3>Dashboard Error</h3>
             <p>{error}</p>
 
@@ -248,7 +263,7 @@ const AdminDashboard = () => {
               onClick={fetchDashboard}
               style={{
                 padding: '10px 20px',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               Try Again
@@ -259,15 +274,15 @@ const AdminDashboard = () => {
         {/* Dashboard Data */}
         {!loading && !error && stats && (
           <>
-
             {/* Statistics Cards */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '20px',
-              marginTop: '25px'
-            }}>
-
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '20px',
+                marginTop: '25px',
+              }}
+            >
               {cards.map((card, index) => (
                 <div
                   key={index}
@@ -275,10 +290,9 @@ const AdminDashboard = () => {
                     background: 'white',
                     padding: '25px',
                     borderRadius: '12px',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.06)'
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
                   }}
                 >
-
                   <div style={{ fontSize: '30px' }}>
                     {card.icon}
                   </div>
@@ -287,28 +301,29 @@ const AdminDashboard = () => {
                     {card.title}
                   </p>
 
-                  <h2 style={{
-                    fontSize: '30px',
-                    margin: 0,
-                    color: '#192951'
-                  }}>
+                  <h2
+                    style={{
+                      fontSize: '30px',
+                      margin: 0,
+                      color: '#192951',
+                    }}
+                  >
                     {card.value}
                   </h2>
-
                 </div>
               ))}
-
             </div>
 
             {/* User Management */}
-            <div style={{
-              background: 'white',
-              padding: '25px',
-              marginTop: '40px',
-              borderRadius: '12px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.06)'
-            }}>
-
+            <div
+              style={{
+                background: 'white',
+                padding: '25px',
+                marginTop: '40px',
+                borderRadius: '12px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
+              }}
+            >
               <h2>User Management</h2>
 
               <p style={{ color: '#64748b' }}>
@@ -319,14 +334,14 @@ const AdminDashboard = () => {
 
               {/* Users Table */}
               <div style={{ overflowX: 'auto' }}>
-
-                <table style={{
-                  width: '100%',
-                  borderCollapse: 'collapse',
-                  textAlign: 'left',
-                  minWidth: '750px'
-                }}>
-
+                <table
+                  style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    textAlign: 'left',
+                    minWidth: '750px',
+                  }}
+                >
                   <thead>
                     <tr style={{ background: '#f1f5f9' }}>
                       <th style={thStyle}>ID</th>
@@ -339,48 +354,42 @@ const AdminDashboard = () => {
                   </thead>
 
                   <tbody>
-
                     {users.map((user) => (
                       <tr key={user.id}>
+                        <td style={tdStyle}>{user.id}</td>
+                        <td style={tdStyle}>{user.username}</td>
+                        <td style={tdStyle}>{user.email || 'N/A'}</td>
 
                         <td style={tdStyle}>
-                          {user.id}
-                        </td>
-
-                        <td style={tdStyle}>
-                          {user.username}
-                        </td>
-
-                        <td style={tdStyle}>
-                          {user.email || 'N/A'}
-                        </td>
-
-                        <td style={tdStyle}>
-                          <span style={{
-                            padding: '5px 10px',
-                            borderRadius: '20px',
-                            background:
-                              user.role === 'admin'
-                                ? '#ede9fe'
-                                : user.role === 'mentor'
-                                  ? '#dbeafe'
-                                  : '#dcfce7',
-                            color:
-                              user.role === 'admin'
-                                ? '#6d28d9'
-                                : user.role === 'mentor'
-                                  ? '#1d4ed8'
-                                  : '#15803d'
-                          }}>
+                          <span
+                            style={{
+                              padding: '5px 10px',
+                              borderRadius: '20px',
+                              background:
+                                user.role === 'admin'
+                                  ? '#ede9fe'
+                                  : user.role === 'mentor'
+                                    ? '#dbeafe'
+                                    : '#dcfce7',
+                              color:
+                                user.role === 'admin'
+                                  ? '#6d28d9'
+                                  : user.role === 'mentor'
+                                    ? '#1d4ed8'
+                                    : '#15803d',
+                            }}
+                          >
                             {user.role.toUpperCase()}
                           </span>
                         </td>
 
                         <td style={tdStyle}>
-                          <span style={{
-                            color: user.is_active ? 'green' : 'red',
-                            fontWeight: 'bold'
-                          }}>
+                          <span
+                            style={{
+                              color: user.is_active ? 'green' : 'red',
+                              fontWeight: 'bold',
+                            }}
+                          >
                             {user.is_active ? 'Active' : 'Inactive'}
                           </span>
                         </td>
@@ -388,7 +397,6 @@ const AdminDashboard = () => {
                         <td style={tdStyle}>
                           {new Date(user.date_joined).toLocaleDateString()}
                         </td>
-
                       </tr>
                     ))}
 
@@ -399,20 +407,13 @@ const AdminDashboard = () => {
                         </td>
                       </tr>
                     )}
-
                   </tbody>
-
                 </table>
-
               </div>
-
             </div>
-
           </>
         )}
-
       </main>
-
     </div>
   )
 }
@@ -420,12 +421,12 @@ const AdminDashboard = () => {
 const thStyle = {
   padding: '14px',
   borderBottom: '1px solid #ddd',
-  whiteSpace: 'nowrap'
+  whiteSpace: 'nowrap',
 }
 
 const tdStyle = {
   padding: '14px',
-  borderBottom: '1px solid #eee'
+  borderBottom: '1px solid #eee',
 }
 
-export default AdminDashboard;
+export default AdminDashboard

@@ -1,8 +1,8 @@
-
+﻿
 import axios from 'axios'
 
 const API = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/',
+  baseURL: 'https://mentormatch-backend-w23v.onrender.com/api/',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -78,7 +78,7 @@ API.interceptors.response.use(
         }
 
         const response = await axios.post(
-          'http://127.0.0.1:8000/api/auth/token/refresh/',
+          'https://mentormatch-backend-w23v.onrender.com/api/auth/token/refresh/',
           {
             refresh: refreshToken,
           }
@@ -126,3 +126,4 @@ API.interceptors.response.use(
 )
 
 export default API;
+

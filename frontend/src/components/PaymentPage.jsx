@@ -8,7 +8,7 @@ function PaymentPage({ booking, onBack, onPaymentSuccess }) {
   const [message, setMessage] = useState('')
   const [paymentDone, setPaymentDone] = useState(false)
 
-  const API_URL = 'http://127.0.0.1:8000/api/payments/'
+  const API_URL = 'https://mentormatch-backend-w23v.onrender.com/api/payments/'
 
   if (!booking) {
     return (
