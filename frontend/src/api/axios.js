@@ -8,13 +8,30 @@ const API = axios.create({
   },
 })
 
+// Get token from either storage
+const getToken = (key) => {
+  return (
+    localStorage.getItem(key) ||
+    sessionStorage.getItem(key)
+  )
+}
+
+// Save token in the storage where refresh token exists
+const saveToken = (key, value) => {
+  if (localStorage.getItem('refresh')) {
+    localStorage.setItem(key, value)
+  } else {
+    sessionStorage.setItem(key, value)
+  }
+}
+
 // ==================================
 // REQUEST INTERCEPTOR
 // ==================================
 
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access')
+    const token = getToken('access')
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -55,6 +72,8 @@ API.interceptors.response.use(
       error.response?.status === 401 &&
       originalRequest &&
       !originalRequest._retry &&
+      !originalRequest.url?.includes('auth/login/') &&
+      !originalRequest.url?.includes('auth/register/') &&
       !originalRequest.url?.includes('auth/token/refresh/')
     ) {
 
@@ -67,16 +86,16 @@ API.interceptors.response.use(
         })
       }
 
+      const refreshToken = getToken('refresh')
+
+      if (!refreshToken) {
+        return Promise.reject(error)
+      }
+
       originalRequest._retry = true
       isRefreshing = true
 
       try {
-        const refreshToken = localStorage.getItem('refresh')
-
-        if (!refreshToken) {
-          throw new Error('Refresh token not found')
-        }
-
         const response = await axios.post(
           'https://mentormatch-backend-w23v.onrender.com/api/auth/token/refresh/',
           {
@@ -86,7 +105,7 @@ API.interceptors.response.use(
 
         const newAccessToken = response.data.access
 
-        localStorage.setItem('access', newAccessToken)
+        saveToken('access', newAccessToken)
 
         processQueue(null, newAccessToken)
 
@@ -101,8 +120,13 @@ API.interceptors.response.use(
 
         localStorage.removeItem('access')
         localStorage.removeItem('refresh')
+        sessionStorage.removeItem('access')
+        sessionStorage.removeItem('refresh')
+
         localStorage.removeItem('username')
         localStorage.removeItem('role')
+        sessionStorage.removeItem('username')
+        sessionStorage.removeItem('role')
 
         return Promise.reject(refreshError)
 
@@ -125,5 +149,4 @@ API.interceptors.response.use(
   }
 )
 
-export default API;
-
+export default API

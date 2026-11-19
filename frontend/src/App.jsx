@@ -1,3 +1,4 @@
+
 import './App.css'
 import PaymentPage from './components/PaymentPage'
 import Register from './components/Register'
@@ -19,6 +20,15 @@ import MentorDashboard from './components/MentorDashboard'
 import BookingPage from './components/BookingPage'
 import BookingSuccessPage from './components/BookingSuccessPage'
 import AdminDashboard from './components/AdminDashboard'
+
+
+// =============================================
+// AUTH STORAGE HELPER
+// =============================================
+
+const getStoredAuth = (key) => {
+  return localStorage.getItem(key) || sessionStorage.getItem(key)
+}
 
 
 // =============================================
@@ -55,6 +65,7 @@ function StudentDashboardRoute(props) {
 // =============================================
 
 function PaymentPageRoute() {
+
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -101,15 +112,15 @@ function App() {
   // =============================================
 
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem('access')
+    !!getStoredAuth('access')
   )
 
   const [username, setUsername] = useState(
-    localStorage.getItem('username') || ''
+    getStoredAuth('username') || ''
   )
 
   const [role, setRole] = useState(
-    localStorage.getItem('role') || ''
+    getStoredAuth('role') || ''
   )
 
 
@@ -278,9 +289,9 @@ function App() {
 
       ...(name === 'date'
         ? {
-            start_time: '',
-            end_time: ''
-          }
+          start_time: '',
+          end_time: ''
+        }
         : {})
     }))
 
@@ -370,7 +381,7 @@ function App() {
 
   const fetchBookings = async () => {
 
-    if (!localStorage.getItem('access')) {
+    if (!getStoredAuth('access')) {
       setBookings([])
       return
     }
@@ -413,7 +424,7 @@ function App() {
 
   const fetchNotifications = async () => {
 
-    if (!localStorage.getItem('access')) {
+    if (!getStoredAuth('access')) {
       setNotifications([])
       return
     }
@@ -460,7 +471,7 @@ function App() {
 
   const fetchStudentProfile = async () => {
 
-    if (!localStorage.getItem('access')) {
+    if (!getStoredAuth('access')) {
       setStudentProfile(null)
       return
     }
@@ -529,14 +540,13 @@ function App() {
 
       const message = errorData
         ? Object.entries(errorData)
-            .map(([key, value]) =>
-              `${key}: ${
-                Array.isArray(value)
-                  ? value.join(', ')
-                  : String(value)
-              }`
-            )
-            .join(' | ')
+          .map(([key, value]) =>
+            `${key}: ${Array.isArray(value)
+              ? value.join(', ')
+              : String(value)
+            }`
+          )
+          .join(' | ')
         : 'Unable to update profile.'
 
       setProfileError(message)
@@ -566,9 +576,9 @@ function App() {
         previous.map((notification) =>
           notification.id === notificationId
             ? {
-                ...notification,
-                is_read: true
-              }
+              ...notification,
+              is_read: true
+            }
             : notification
         )
       )
@@ -610,23 +620,19 @@ function App() {
         }
       )
 
-      // Update local booking state immediately
       setBookings(previous =>
         previous.map(item =>
           item.id === bookingId
             ? {
-                ...item,
-                ...response.data,
-                status: newStatus
-              }
+              ...item,
+              ...response.data,
+              status: newStatus
+            }
             : item
         )
       )
 
-      // Refresh bookings from backend
       await fetchBookings()
-
-      // Refresh notifications
       await fetchNotifications()
 
       return response.data
@@ -644,16 +650,15 @@ function App() {
         ? typeof errorData === 'string'
           ? errorData
           : Object.entries(errorData)
-              .map(([key, value]) =>
-                `${key}: ${
-                  Array.isArray(value)
-                    ? value.join(', ')
-                    : typeof value === 'object'
-                      ? JSON.stringify(value)
-                      : String(value)
-                }`
-              )
-              .join('\n')
+            .map(([key, value]) =>
+              `${key}: ${Array.isArray(value)
+                ? value.join(', ')
+                : typeof value === 'object'
+                  ? JSON.stringify(value)
+                  : String(value)
+              }`
+            )
+            .join('\n')
         : 'Unable to update booking status.'
 
       throw new Error(errorMessage)
@@ -667,7 +672,7 @@ function App() {
 
   const fetchMentors = async () => {
 
-    if (!localStorage.getItem('access')) {
+    if (!getStoredAuth('access')) {
       setMentors([])
       return
     }
@@ -712,7 +717,7 @@ function App() {
 
   const fetchAvailabilities = async () => {
 
-    if (!localStorage.getItem('access')) {
+    if (!getStoredAuth('access')) {
       setAvailabilities([])
       return
     }
@@ -759,7 +764,7 @@ function App() {
 
   const fetchSessionFee = async () => {
 
-    if (!localStorage.getItem('access')) {
+    if (!getStoredAuth('access')) {
       setSessionFee(null)
       return
     }
@@ -833,14 +838,13 @@ function App() {
 
       const message = errorData
         ? Object.entries(errorData)
-            .map(([key, value]) =>
-              `${key}: ${
-                Array.isArray(value)
-                  ? value.join(', ')
-                  : String(value)
-              }`
-            )
-            .join(' | ')
+          .map(([key, value]) =>
+            `${key}: ${Array.isArray(value)
+              ? value.join(', ')
+              : String(value)
+            }`
+          )
+          .join(' | ')
         : 'Unable to update session fee.'
 
       setSessionFeeError(message)
@@ -886,14 +890,13 @@ function App() {
 
       const message = errorData
         ? Object.entries(errorData)
-            .map(([key, value]) =>
-              `${key}: ${
-                Array.isArray(value)
-                  ? value.join(', ')
-                  : String(value)
-              }`
-            )
-            .join(' | ')
+          .map(([key, value]) =>
+            `${key}: ${Array.isArray(value)
+              ? value.join(', ')
+              : String(value)
+            }`
+          )
+          .join(' | ')
         : error.message || 'Unable to add availability.'
 
       setAvailabilityError(message)
@@ -931,14 +934,13 @@ function App() {
 
       const message = errorData
         ? Object.entries(errorData)
-            .map(([key, value]) =>
-              `${key}: ${
-                Array.isArray(value)
-                  ? value.join(', ')
-                  : String(value)
-              }`
-            )
-            .join(' | ')
+          .map(([key, value]) =>
+            `${key}: ${Array.isArray(value)
+              ? value.join(', ')
+              : String(value)
+            }`
+          )
+          .join(' | ')
         : error.message || 'Unable to update availability.'
 
       setAvailabilityError(message)
@@ -1073,12 +1075,11 @@ function App() {
 
           errorMessage = Object.entries(errorData)
             .map(([key, value]) =>
-              `${key}: ${
-                Array.isArray(value)
-                  ? value.join(', ')
-                  : typeof value === 'object'
-                    ? JSON.stringify(value)
-                    : String(value)
+              `${key}: ${Array.isArray(value)
+                ? value.join(', ')
+                : typeof value === 'object'
+                  ? JSON.stringify(value)
+                  : String(value)
               }`
             )
             .join(' | ')
@@ -1192,10 +1193,11 @@ function App() {
 
     setSlotsLoading(false)
 
-    localStorage.removeItem('access')
-    localStorage.removeItem('refresh')
-    localStorage.removeItem('username')
-    localStorage.removeItem('role')
+      // Clear authentication from both storages
+      ;['access', 'refresh', 'username', 'role'].forEach((key) => {
+        localStorage.removeItem(key)
+        sessionStorage.removeItem(key)
+      })
 
     setBookings([])
     setNotifications([])
@@ -1236,7 +1238,7 @@ function App() {
     setRole('')
     setIsAuthenticated(false)
 
-    navigate('/')
+    navigate('/login', { replace: true })
   }
 
 
@@ -1327,15 +1329,34 @@ function App() {
         element={
           isAuthenticated
             ? (
-                <Navigate
-                  to={
-                    role === 'student'
-                      ? '/dashboard/overview'
-                      : '/dashboard'
-                  }
-                  replace
-                />
-              )
+              <Navigate
+                to={
+                  role === 'student'
+                    ? '/dashboard/overview'
+                    : '/dashboard'
+                }
+                replace
+              />
+            )
+            : <Login onLogin={handleLogin} />
+        }
+      />
+      {/* LOGIN PAGE - /login */}
+
+      <Route
+        path="/login"
+        element={
+          isAuthenticated
+            ? (
+              <Navigate
+                to={
+                  role === 'student'
+                    ? '/dashboard/overview'
+                    : '/dashboard'
+                }
+                replace
+              />
+            )
             : <Login onLogin={handleLogin} />
         }
       />
@@ -1347,25 +1368,25 @@ function App() {
         path="/booking/:mentorId"
         element={
           isAuthenticated &&
-          role === 'student' &&
-          selectedMentor
+            role === 'student' &&
+            selectedMentor
             ? (
-                <BookingPage
-                  selectedMentor={selectedMentor}
-                  booking={booking}
-                  handleBookingChange={handleBookingChange}
-                  availableSlots={availableSlots}
-                  slotsLoading={slotsLoading}
-                  slotsError={slotsError}
-                  handleSlotSelect={handleSlotSelect}
-                  bookingError={bookingError}
-                  bookingMessage={bookingMessage}
-                  submitting={submitting}
-                  today={today}
-                  onSubmit={submitBooking}
-                  onCancel={closeBooking}
-                />
-              )
+              <BookingPage
+                selectedMentor={selectedMentor}
+                booking={booking}
+                handleBookingChange={handleBookingChange}
+                availableSlots={availableSlots}
+                slotsLoading={slotsLoading}
+                slotsError={slotsError}
+                handleSlotSelect={handleSlotSelect}
+                bookingError={bookingError}
+                bookingMessage={bookingMessage}
+                submitting={submitting}
+                today={today}
+                onSubmit={submitBooking}
+                onCancel={closeBooking}
+              />
+            )
             : <Navigate to="/dashboard/overview" replace />
         }
       />
@@ -1402,10 +1423,10 @@ function App() {
         element={
           isAuthenticated && role === 'student'
             ? (
-                <StudentDashboardRoute
-                  {...studentDashboardProps}
-                />
-              )
+              <StudentDashboardRoute
+                {...studentDashboardProps}
+              />
+            )
             : <Navigate to="/" replace />
         }
       />
@@ -1469,9 +1490,14 @@ function App() {
           )
         }
       />
-            {/* REGISTER PAGE */}
-      <Route path="/register" element={<Register />} />
-    
+
+
+      {/* REGISTER PAGE */}
+
+      <Route
+        path="/register"
+        element={<Register />}
+      />
 
 
       {/* INVALID ROUTE */}
@@ -1485,4 +1511,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

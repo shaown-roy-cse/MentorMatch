@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ onLogout }) => {
   const [stats, setStats] = useState(null)
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -56,16 +56,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchDashboard()
   }, [])
-
-  // Logout Function
-  const handleLogout = () => {
-    localStorage.removeItem('access')
-    localStorage.removeItem('refresh')
-    localStorage.removeItem('username')
-    localStorage.removeItem('role')
-
-    window.location.href = '/login'
-  }
 
   // Dashboard Statistics Cards
   const cards = stats ? [
@@ -197,7 +187,7 @@ const AdminDashboard = () => {
 
         {/* Logout */}
         <button
-          onClick={handleLogout}
+          onClick={onLogout}
           style={{
             width: '100%',
             padding: '14px',
